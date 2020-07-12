@@ -1,4 +1,4 @@
-import React, {useState, Component} from 'react';
+import React, { Component} from 'react';
 import QuoteBox from './containers/QuoteBox';
 class App extends Component {
   

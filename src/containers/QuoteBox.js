@@ -8,10 +8,11 @@ class QuoteBox extends Component {
         quotes:[],
         quote: "",
         author: "FALNA",
+        color: "",
     }
     componentDidMount(){
         console.log("QuoteBox: Mounted");
-        console.log("QuoteBox: color:",this.state.color);
+        // console.log("QuoteBox: color:",this.state.color);
         axios.get("https://type.fit/api/quotes")
             .then((res) => {
                 var randomItem = res.data[Math.floor(Math.random()*res.data.length)];
@@ -19,25 +20,28 @@ class QuoteBox extends Component {
             }
         )
     }
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return nextState.color !== this.state.color;        
-    // }
-
     
-    nextQuoteHandler = (e) => {
-        var randomItem = this.state.quotes[Math.floor(Math.random()*this.state.quotes.length)];
-        this.setState({quote: randomItem.text,author: randomItem.author});
-        this.props.handler(e);
+    static getDerivedStateFromProps(props,state) {
+        if(state.quotes.length !== 0){
+            const randomItem = state.quotes[Math.floor(Math.random()*state.quotes.length)];
+            const quote2 = randomItem.text;
+            const author2 =  randomItem.author;
+            return ({quote: quote2,author: author2,color: props.color});
+
+        }
+        return ({color: props.color});
+
     }
+    
     render() {
         return(
-            <div id="quote-box" style={{color: this.props.color}}>
+            <div id="quote-box" style={{color: this.state.color}}>
                 <Quote 
                     color={this.state.color} 
                     text={this.state.quote}
                 />
                 <Author author={this.state.author}/>
-                <Buttons bgColor={this.props.color} handler={(e) => this.nextQuoteHandler(e)}/>
+                <Buttons bgColor={this.state.color} handler={(e) => this.props.handler(e)}/>
             </div>
         )
     }
